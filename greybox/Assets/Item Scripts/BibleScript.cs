@@ -22,9 +22,23 @@ public class BibleScript : MonoBehaviour, Interactable {
 
 	public void Interact(CharacterScript character)
     {
-		Debug.Log("Read page from the bible");
-		// TODO: Add some randomization (Read Psalms 8, Ecclesiastes 4)
+		readRandomVerseFromTheBible();
 		// Increase character "Bible" skills
 		// Consume some time
     }
+
+
+	private void readRandomVerseFromTheBible(){
+		string[] verses = new string[]{
+			"Psalms 8",
+			"Genesis 1",
+			"John 3:16",
+			"Revelations 14",
+			"Philippians 2",
+			"Leviticus 9"
+		};
+
+		string randomVerse = verses[Random.Range(0,verses.Length-1)];
+		Debug.Log("Read " + randomVerse);
+	}
 }
