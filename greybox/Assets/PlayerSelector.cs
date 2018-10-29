@@ -23,6 +23,8 @@ public class PlayerSelector : MonoBehaviour {
             dropdown.options.Add(new Dropdown.OptionData(character.name, null));
         }
 
+        dropdown.value = 0;
+        dropdown.RefreshShownValue();
         previous = playables[0];
         previous.gameObject.AddComponent<PlayerScript>();
         
