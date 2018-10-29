@@ -2,12 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * NOTE: a good majority of this script is currently not being used.
+ * The goal of the script was to create a collidable trigger zone
+ * that allows a character to know what objects are nearby them.
+ *
+ * Initially, I was approaching the problem with a generic implementation
+ * of the Observer pattern. While this would work, I realized that at 
+ * present I have no real interest in the actually entrance/exit of 
+ * any given item: but rather am only interested in the aggregate.
+ *
+ * That being said, I can foresee it becoming useful in the future
+ * and have thus left it in for now. We can review that decision later.
+ */
+
 public class ProximityScript : MonoBehaviour {
 
 	private Dictionary<string, List<Enterable>> subscribers = new Dictionary<string, List<Enterable>>();
 	private Dictionary<string, List<GameObject>> nearbyObjects = new Dictionary<string, List<GameObject>>();
 
-	// Record gameObjects entereing the proximity zone
+	// Record gameObjects entering the proximity zone
 	void OnTriggerEnter(Collider other) {
 		if(subscribers.ContainsKey(other.tag)){
 
@@ -21,6 +35,7 @@ public class ProximityScript : MonoBehaviour {
 		}
 	}
 
+	// Record gameObjects leaving the zone
 	void OnTriggerExit(Collider other) {
 		if(subscribers.ContainsKey(other.tag)){
 			foreach(Enterable script in subscribers[other.tag]){

@@ -5,15 +5,12 @@ using TMPro;
 
 public class CharacterScript : MonoBehaviour {
 
-    public string name;
+    public string Name;
 
-    //added null
     private Transform heldObject = null;
-
 
     public void pickUp(Transform myThing) {
 
-        //added if statement
         if (heldObject == null) {
             heldObject = myThing;
 
@@ -30,11 +27,9 @@ public class CharacterScript : MonoBehaviour {
         }
     }
 
-    //added use method
     public void use() {
 
         if (heldObject != null) {
-
             heldObject.Rotate(Vector3.up, 5);
         }
         if(heldObject.GetComponent<ItemScript>().itemType == "Book") {
@@ -42,13 +37,10 @@ public class CharacterScript : MonoBehaviour {
         }
     }
 
-	// Use this for initialization
 	void Start () {
-        gameObject.GetComponentInChildren<TextMeshPro>().text = name;
-
+        gameObject.GetComponentInChildren<TextMeshPro>().text = Name;
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		
 	}
