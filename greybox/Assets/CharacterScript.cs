@@ -12,16 +12,19 @@ public class CharacterScript : MonoBehaviour {
 
     public void pickUp(Transform myThing) {
 
-        heldObject = myThing;
+        if(!IsCarryingSomething()) {
 
-        myThing.position = transform.position + new Vector3(0, 1, 0);
-        myThing.parent = transform;
+            // place object over head
+            myThing.position = transform.position + new Vector3(0, 1, 0);
+            myThing.parent = transform;
 
+            // keep track of what we are holding
+            heldObject = myThing;
+        }
     }
 
     public void drop() {
-        if (heldObject != null)
-        {
+        if (IsCarryingSomething()) {
             heldObject.position = transform.Find("DropSpot").position;
             heldObject.parent = null;
             heldObject = null;
@@ -30,9 +33,6 @@ public class CharacterScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        //GameObject cubeLabel = GameObject.Find("CubeName");
-        //cubeLabel.GetComponent<TextMeshProUGUI>().text = name;
-
         gameObject.GetComponentInChildren<TextMeshPro>().text = name;
 
 	}
@@ -41,4 +41,8 @@ public class CharacterScript : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public bool IsCarryingSomething(){
+        return heldObject != null;
+    }
 }
