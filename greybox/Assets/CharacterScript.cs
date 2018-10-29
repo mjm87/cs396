@@ -23,8 +23,7 @@ public class CharacterScript : MonoBehaviour {
     }
 
     public void drop() {
-        if (heldObject != null)
-        {
+        if (IsCarryingSomething()) {
             heldObject.position = transform.Find("DropSpot").position;
             heldObject.parent = null;
             heldObject = null;
@@ -45,9 +44,6 @@ public class CharacterScript : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        //GameObject cubeLabel = GameObject.Find("CubeName");
-        //cubeLabel.GetComponent<TextMeshProUGUI>().text = name;
-
         gameObject.GetComponentInChildren<TextMeshPro>().text = name;
 
 	}
@@ -56,4 +52,8 @@ public class CharacterScript : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    public bool IsCarryingSomething(){
+        return heldObject != null;
+    }
 }
