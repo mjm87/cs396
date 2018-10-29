@@ -7,19 +7,18 @@ public class CharacterScript : MonoBehaviour {
 
     public string name;
 
-    private Transform heldObject;
+    //added null
+    private Transform heldObject = null;
 
 
     public void pickUp(Transform myThing) {
 
-        if(!IsCarryingSomething()) {
+        //added if statement
+        if (heldObject == null) {
+            heldObject = myThing;
 
-            // place object over head
             myThing.position = transform.position + new Vector3(0, 1, 0);
             myThing.parent = transform;
-
-            // keep track of what we are holding
-            heldObject = myThing;
         }
     }
 
@@ -28,6 +27,18 @@ public class CharacterScript : MonoBehaviour {
             heldObject.position = transform.Find("DropSpot").position;
             heldObject.parent = null;
             heldObject = null;
+        }
+    }
+
+    //added use method
+    public void use() {
+
+        if (heldObject != null) {
+
+            heldObject.Rotate(Vector3.up, 5);
+        }
+        if(heldObject.GetComponent<ItemScript>().itemType == "Book") {
+            heldObject.Rotate(Vector3.forward, 5);
         }
     }
 

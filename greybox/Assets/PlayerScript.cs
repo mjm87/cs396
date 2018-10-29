@@ -24,6 +24,13 @@ public class PlayerScript : MonoBehaviour, Enterable {
         // transform.Rotate(Vector3.right * Time.deltaTime * Input.GetAxis("Horizontal")*speed);
 
 
+        //added use input
+        if (Input.GetKey(KeyCode.M)){
+                
+            GetComponent<CharacterScript>().use();
+            
+        }
+
         rotationAngle = Input.GetAxis("Horizontal") * Time.deltaTime * rotationSpeed;
         transform.Rotate(0, rotationAngle, 0); 
      
