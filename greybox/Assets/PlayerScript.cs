@@ -33,6 +33,13 @@ public class PlayerScript : MonoBehaviour {
             GetComponent<CharacterScript>().drop();
         }
 
+        //added use input
+        if (Input.GetKey(KeyCode.M)){
+                
+            GetComponent<CharacterScript>().use();
+            
+        }
+
         rotationAngle = Input.GetAxis("Horizontal") * Time.deltaTime * rotationSpeed;
         transform.Rotate(0, rotationAngle, 0); 
      
