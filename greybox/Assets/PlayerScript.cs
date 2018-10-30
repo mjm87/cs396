@@ -16,7 +16,6 @@ public class PlayerScript : MonoBehaviour, Enterable {
     }
 
     void OnDestroy () {
-        // cleanup empty references
         GetComponentInChildren<ProximityScript>().Unsubscribe("Item", this);
     }
 
