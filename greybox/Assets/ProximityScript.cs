@@ -23,6 +23,22 @@ public class ProximityScript : MonoBehaviour {
 
 	// Record gameObjects entering the proximity zone
 	void OnTriggerEnter(Collider other) {
+
+		// look at each component that's been subscribed to
+		foreach(string component in subscribers.Keys){
+			if(other.GetComponent(component)){
+				
+				// keep a list of all the objects with the given component
+				nearbyObjects[component].Add(other.gameObject);
+
+				// update any listening scripts
+				foreach(Enterable script in subscribers[component]){
+					script.OnEntered(other.gameObject);
+				}
+
+			}
+		}
+
 		if(subscribers.ContainsKey(other.tag)){
 
 			// update list of nearby objects with that tag
@@ -37,6 +53,15 @@ public class ProximityScript : MonoBehaviour {
 
 	// Record gameObjects leaving the zone
 	void OnTriggerExit(Collider other) {
+
+		foreach(string component in subscribers.Keys) {
+			if(other.GetComponent(component)) {
+				foreach(Enterable script in subscribers[component]) {
+					script.OnExited(other.gameObject);
+				}
+			}
+		}	
+
 		if(subscribers.ContainsKey(other.tag)){
 			foreach(Enterable script in subscribers[other.tag]){
 				script.OnExited(other.gameObject);

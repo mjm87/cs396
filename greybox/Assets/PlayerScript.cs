@@ -11,14 +11,16 @@ public class PlayerScript : MonoBehaviour, Enterable {
     private CharacterScript character;
 
     void Start () {
-        GetComponentInChildren<ProximityScript>().Subscribe("Item", this);
-        GetComponentInChildren<ProximityScript>().Subscribe("Person", this);
+        GetComponentInChildren<ProximityScript>().Subscribe("Interactable", this);
+        GetComponentInChildren<ProximityScript>().Subscribe("Conversable", this);
+        GetComponentInChildren<ProximityScript>().Subscribe("Transform", this);
         character = GetComponent<CharacterScript>();
     }
 
     void OnDestroy () {
-        GetComponentInChildren<ProximityScript>().Unsubscribe("Item", this);
-        GetComponentInChildren<ProximityScript>().Unsubscribe("Person", this);
+        GetComponentInChildren<ProximityScript>().Unsubscribe("Interactable", this);
+        GetComponentInChildren<ProximityScript>().Unsubscribe("Conversable", this);
+        GetComponentInChildren<ProximityScript>().Unsubscribe("Transform", this);
     }
 
 	void Update () {
@@ -35,7 +37,7 @@ public class PlayerScript : MonoBehaviour, Enterable {
      
         // Interact with item
         if(Input.GetKeyUp(KeyCode.E)) {
-            GameObject item = getNearest("Item");
+            GameObject item = getNearest("Interactable");
             if(item != null) {
                 interactWith(item);
             }
@@ -43,7 +45,7 @@ public class PlayerScript : MonoBehaviour, Enterable {
 
         // Talk to nearest person
         if(Input.GetKeyUp(KeyCode.T)){
-            GameObject person = getNearest("Person");
+            GameObject person = getNearest("Conversable");
             if(person != null) {
                 character.StartConversationWith(
                     character.greeting, 
@@ -59,7 +61,7 @@ public class PlayerScript : MonoBehaviour, Enterable {
                 character.drop();
             } else {
                 // otherwise pickup nearest available item
-                GameObject item = getNearest("Item");
+                GameObject item = getNearest("Transform");
                 if(item != null && isWithinPickupRange(item)){
                     character.pickUp(item.transform);
                 }
