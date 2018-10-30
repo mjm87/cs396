@@ -93,4 +93,25 @@ public class ProximityScript : MonoBehaviour {
 			Unsubscribe(tag, script);
 		}
 	}
+
+	private Vector3 scale;
+	private float scaleTime;
+
+	public void ResetSphere(){
+		// shrink scale to nothingness
+		scale = transform.localScale;
+		transform.localScale = Vector3.zero;
+		scaleTime = Time.time;
+	}
+
+	void Start () {
+		ResetSphere();
+	}
+
+	void Update() {
+		// gradually grow back to full size
+		if(Time.time - scaleTime <= 1) {
+			transform.localScale = Vector3.Lerp(transform.localScale, scale, Time.time - scaleTime);
+		}
+	}
 }
