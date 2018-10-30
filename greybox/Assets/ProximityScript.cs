@@ -58,7 +58,7 @@ public class ProximityScript : MonoBehaviour {
 	// proximity trigger area / zone
 	public GameObject[] GetObjectsWithComponent(string component){
 		if(nearbyObjects.ContainsKey(component)) {
-			return nearbyObjects[tag].ToArray();
+			return nearbyObjects[component].ToArray();
 		}
 		return null;
 	}
