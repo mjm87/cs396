@@ -72,7 +72,7 @@ public class PlayerScript : MonoBehaviour, Enterable {
     private GameObject getNearest(string tag) {
 
         // Find all "tagged" game objects within proximity of the character
-        GameObject[] nearbyGameObjects = GetComponentInChildren<ProximityScript>().GetObjectsWithTag(tag);
+        GameObject[] nearbyGameObjects = GetComponentInChildren<ProximityScript>().GetObjectsWithComponent(tag);
         GameObject nearest = null;
 
         if(nearbyGameObjects != null && nearbyGameObjects.Length > 0) {

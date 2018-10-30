@@ -38,84 +38,71 @@ public class ProximityScript : MonoBehaviour {
 
 			}
 		}
-
-		if(subscribers.ContainsKey(other.tag)){
-
-			// update list of nearby objects with that tag
-			nearbyObjects[other.tag].Add(other.gameObject);
-
-			// update any listening scripts
-			foreach(Enterable script in subscribers[other.tag]){
-				script.OnEntered(other.gameObject);
-			}
-		}
 	}
 
 	// Record gameObjects leaving the zone
 	void OnTriggerExit(Collider other) {
 
+		// check each type of component we're tracking
 		foreach(string component in subscribers.Keys) {
 			if(other.GetComponent(component)) {
+				// notify each interested script
 				foreach(Enterable script in subscribers[component]) {
 					script.OnExited(other.gameObject);
 				}
 			}
 		}	
-
-		if(subscribers.ContainsKey(other.tag)){
-			foreach(Enterable script in subscribers[other.tag]){
-				script.OnExited(other.gameObject);
-			}
-		}
 	}
 
 	// Returns a list of all GameObjects that have entered the
 	// proximity trigger area / zone
-	public GameObject[] GetObjectsWithTag(string tag){
-		if(nearbyObjects.ContainsKey(tag)) {
+	public GameObject[] GetObjectsWithComponent(string component){
+		if(nearbyObjects.ContainsKey(component)) {
 			return nearbyObjects[tag].ToArray();
 		}
 		return null;
 	}
 
-	// subscribe the listener to a given tag
-	public void Subscribe(string tag, Enterable script){
+	// subscribe listener to messages when any object with the 
+	// specified component enters or exits the zone
+	public void Subscribe(string component, Enterable script){
 
 		// creating a new list of subscribers if necessary
-		if(!subscribers.ContainsKey(tag)) {
-			subscribers[tag] = new List<Enterable>();
-			nearbyObjects[tag] = new List<GameObject>();
+		if(!subscribers.ContainsKey(component)) {
+			subscribers[component] = new List<Enterable>();
+			nearbyObjects[component] = new List<GameObject>();
 		}
 
 		// add the subscriber
-		subscribers[tag].Add(script);
+		subscribers[component].Add(script);
 	}
 
-	// subscribe listener to a list of tags
-	public void Subscribe(string[] tags, Enterable script){
-		foreach(string tag in tags) {
-			Subscribe(tag, script);
+	// subscribe listener to a list of components
+	public void Subscribe(string[] components, Enterable script){
+		foreach(string component in components) {
+			Subscribe(component, script);
 		}
 	}
 
-	// unsubscribe listener from the tag
-	public void Unsubscribe(string tag, Enterable script){
-		if(subscribers.ContainsKey(tag)){
+	// unsubscribe listener from following nearby objects
+	// with the given component (i.e. c# script, interface, Transform)
+	public void Unsubscribe(string component, Enterable script){
+		if(subscribers.ContainsKey(component)){
 
 			// remove subscriber from the list of subscribers
-			subscribers[tag].Remove(script);
+			subscribers[component].Remove(script);
 
-			// remove dictionary entry if no other subscribers are interested in this tag...
-			if(subscribers[tag].Count == 0) {
-				subscribers.Remove(tag);
+			// remove dictionary entry if no other subscribers are interested in this component...
+			if(subscribers[component].Count == 0) {
+				subscribers.Remove(component);
 			}
 		}
 	}
 
-	// unsubscribe from multiple tags
-	public void Unsubscribe(string[] tags, Enterable script){
-		foreach(string tag in tags) {
-			Unsubscribe(tag, script);
+	// unsubscribe from multiple components
+	public void Unsubscribe(string[] components, Enterable script){
+		foreach(string component in components) {
+			Unsubscribe(component, script);
 		}
 	}
 
