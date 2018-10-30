@@ -8,11 +8,15 @@ public class PlayerScript : MonoBehaviour, Enterable {
     public float rotationSpeed = 50f;
     private float rotationAngle = 0;
 
+    private CharacterScript character;
+
     void Start () {
         GetComponentInChildren<ProximityScript>().Subscribe("Item", this);
+        character = GetComponent<CharacterScript>();
     }
 
     void OnDestroy () {
+        // cleanup empty references
         GetComponentInChildren<ProximityScript>().Unsubscribe("Item", this);
     }
 
@@ -25,7 +29,7 @@ public class PlayerScript : MonoBehaviour, Enterable {
 
         // Use item
         if (Input.GetKey(KeyCode.M)){
-            GetComponent<CharacterScript>().use();
+            character.use();
         }
      
         // Interact with item
@@ -39,13 +43,13 @@ public class PlayerScript : MonoBehaviour, Enterable {
         // Drop / Pick-up
         if(Input.GetKeyUp(KeyCode.Space)){
             // if we're carrying something, drop it
-            if(GetComponent<CharacterScript>().IsCarryingSomething()){
-                GetComponent<CharacterScript>().drop();
+            if(character.IsCarryingSomething()){
+                character.drop();
             } else {
                 // otherwise pickup nearest available item
                 GameObject item = getNearestItem();
                 if(item != null && isWithinPickupRange(item)){
-                    pickup(item);
+                    character.pickUp(item.transform);
                 }
             }
         }
@@ -73,15 +77,10 @@ public class PlayerScript : MonoBehaviour, Enterable {
 
     // Call the Interact method on the item
     private void interactWith(GameObject item){
-        item.GetComponent<Interactable>().Interact(GetComponent<CharacterScript>());
+        item.GetComponent<Interactable>().Interact(character);
     }
 
-    // Pickup the item
-    private void pickup(GameObject item){
-        GetComponent<CharacterScript>().pickUp(item.transform);
-    }
-
-    // compute distance from the given item
+    // Compute distance from the given item
     // to the this gameObject's position
     private float distanceTo(GameObject item){
         return (item.transform.position - transform.position).magnitude;
