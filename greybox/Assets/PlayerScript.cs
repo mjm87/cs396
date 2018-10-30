@@ -12,11 +12,13 @@ public class PlayerScript : MonoBehaviour, Enterable {
 
     void Start () {
         GetComponentInChildren<ProximityScript>().Subscribe("Item", this);
+        GetComponentInChildren<ProximityScript>().Subscribe("Person", this);
         character = GetComponent<CharacterScript>();
     }
 
     void OnDestroy () {
         GetComponentInChildren<ProximityScript>().Unsubscribe("Item", this);
+        GetComponentInChildren<ProximityScript>().Unsubscribe("Person", this);
     }
 
 	void Update () {
@@ -33,9 +35,20 @@ public class PlayerScript : MonoBehaviour, Enterable {
      
         // Interact with item
         if(Input.GetKeyUp(KeyCode.E)) {
-            GameObject item = getNearestItem();
+            GameObject item = getNearest("Item");
             if(item != null) {
                 interactWith(item);
+            }
+        }
+
+        // Talk to nearest person
+        if(Input.GetKeyUp(KeyCode.T)){
+            GameObject person = getNearest("Person");
+            if(person != null) {
+                character.StartConversationWith(
+                    character.greeting, 
+                    person.GetComponent<Conversable>()
+                );  
             }
         }
 
@@ -46,7 +59,7 @@ public class PlayerScript : MonoBehaviour, Enterable {
                 character.drop();
             } else {
                 // otherwise pickup nearest available item
-                GameObject item = getNearestItem();
+                GameObject item = getNearest("Item");
                 if(item != null && isWithinPickupRange(item)){
                     character.pickUp(item.transform);
                 }
@@ -54,25 +67,26 @@ public class PlayerScript : MonoBehaviour, Enterable {
         }
     }
 
-    private GameObject getNearestItem(){
+    private GameObject getNearest(string tag) {
 
-        // Find all "item" tagged objects within proximity of the object
-        GameObject[] nearbyItems = GetComponentInChildren<ProximityScript>().GetObjectsWithTag("Item");
-        GameObject nearestItem = null; 
+        // Find all "tagged" game objects within proximity of the character
+        GameObject[] nearbyGameObjects = GetComponentInChildren<ProximityScript>().GetObjectsWithTag(tag);
+        GameObject nearest = null;
 
-        if(nearbyItems.Length > 1) {
+        if(nearbyGameObjects != null && nearbyGameObjects.Length > 0) {
 
-            // Find the closest "item"
-            nearestItem = nearbyItems[0];
-            foreach(GameObject item in nearbyItems){
-                if(distanceTo(nearestItem) > distanceTo(item)){
-                    nearestItem = item;
+            // determent the nearest game object
+            nearest = nearbyGameObjects[0];
+            foreach(GameObject go in nearbyGameObjects){
+                if(distanceTo(nearest) > distanceTo(go)){
+                    nearest = go;
                 }
             }
         }
 
-        return nearestItem;
+        return nearest;
     }
+
 
     // Call the Interact method on the item
     private void interactWith(GameObject item){
