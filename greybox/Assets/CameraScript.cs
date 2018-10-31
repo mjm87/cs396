@@ -9,5 +9,8 @@ public class CameraScript : MonoBehaviour {
 	void Update () {
 
         transform.LookAt(focus);
+
+        Vector3 scrolling = Vector3.forward * Input.GetAxis("Mouse ScrollWheel") * 10f;
+        transform.Translate(scrolling);
 	}
 }
