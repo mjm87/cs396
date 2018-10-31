@@ -21,8 +21,8 @@ public class PlayerSelector : MonoBehaviour {
         foreach(Transform playable in playables)
         {
             CharacterScript character = playable.GetComponent<CharacterScript>();
-            playableDict.Add(character.name, character.transform);
-            dropdown.options.Add(new Dropdown.OptionData(character.name, null));
+            playableDict.Add(character.Name, character.transform);
+            dropdown.options.Add(new Dropdown.OptionData(character.Name, null));
         }
 
         // defaulting the dropdown to the first playable character in the list
@@ -48,5 +48,8 @@ public class PlayerSelector : MonoBehaviour {
 
         // Keeping track of which object now has the PlayerScript
         previous = playableDict[selected];
+
+        // Update camera to point at the newly selected player
+        Camera.main.GetComponent<CameraScript>().focus = playableDict[selected];
     }
 }
