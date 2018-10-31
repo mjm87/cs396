@@ -50,6 +50,8 @@ public class ProximityScript : MonoBehaviour {
 				foreach(Enterable script in subscribers[component]) {
 					script.OnExited(other.gameObject);
 				}
+				// remove object from nearby objects
+				nearbyObjects[component].Remove(other.gameObject);
 			}
 		}	
 	}
